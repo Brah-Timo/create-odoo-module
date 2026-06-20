@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_task_tracker_wizard_form" model="ir.ui.view">
+        <field name="name">task.tracker.wizard.form</field>
+        <field name="model">task.tracker.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Task Tracker — Bulk Action">
+                <group>
+                    <field name="record_ids" widget="many2many_tags"/>
+                    <field name="action"/>
+                    <field name="note" placeholder="Optional reason..."/>
+                </group>
+                <footer>
+                    <button name="action_execute" string="Execute" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_task_tracker_wizard" model="ir.actions.act_window">
+        <field name="name">Task Tracker — Bulk Action</field>
+        <field name="res_model">task.tracker.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="task_tracker.model_task_tracker"/>
+        <field name="binding_view_types">list</field>
+    </record>
+</odoo>

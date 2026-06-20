@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Top-level app menu -->
+    <menuitem id="menu_task_tracker_root"
+              name="Task Tracker"
+              action="action_task_tracker"
+              sequence="100"
+              web_icon="task_tracker,static/description/icon.png"/>
+
+    <!-- Main list sub-menu -->
+    <menuitem id="menu_task_tracker_main"
+              name="Tasks"
+              parent="menu_task_tracker_root"
+              action="action_task_tracker"
+              sequence="10"/>
+
+    <!-- Configuration sub-menu placeholder -->
+    <menuitem id="menu_task_tracker_config"
+              name="Configuration"
+              parent="menu_task_tracker_root"
+              sequence="90"/>
+</odoo>

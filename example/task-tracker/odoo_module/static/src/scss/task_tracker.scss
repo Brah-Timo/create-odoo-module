@@ -1,0 +1,43 @@
+.o_task_tracker {
+    // Module root class — applied to form views
+
+    .o_field_widget {
+        // Custom field styling placeholder
+    }
+
+    .o_statusbar_status {
+        // Custom statusbar styling placeholder
+    }
+
+    // ── Kanban card overrides ─────────────────────────────────────────────
+    .o_kanban_record {
+        border-radius: 8px;
+        transition: box-shadow 0.2s ease;
+
+        &:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+        }
+    }
+
+    // ── Priority star custom colours ──────────────────────────────────────
+    .o_priority .o_priority_star {
+        &.fa-star {
+            color: #f5b700;
+        }
+    }
+}
+
+// ── OWL Widget ───────────────────────────────────────────────────────────────
+.task_tracker-widget {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    color: #666;
+
+    strong {
+        color: #875a7b;
+        font-size: 1.2em;
+    }
+}

@@ -1,0 +1,84 @@
+{
+  "name": "create-odoo-module",
+  "version": "1.0.0",
+  "description": "Next.js for Odoo. One command. Full-stack ERP + Flutter app in seconds.",
+  "bin": {
+  "create-odoo-module": "bin/create-odoo-module.js"
+  },
+  "main": "./src/cli/index.js",
+  "keywords": [
+    "odoo",
+    "flutter",
+    "dart",
+    "cli",
+    "scaffold",
+    "generator",
+    "erp",
+    "module",
+    "create",
+    "boilerplate",
+    "odoo-module",
+    "odoo-generator",
+    "odoo-scaffold",
+    "odoo-flutter",
+    "odoo-rest-api"
+  ],
+  "author": "create-odoo-module <contact@create-odoo-module.dev>",
+  "license": "MIT",
+  "homepage": "https://create-odoo-module.dev",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Brah-Timo/create-odoo-module.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Brah-Timo/create-odoo-module/issues"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "files": [
+    "bin/",
+    "src/",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE"
+  ],
+  "dependencies": {
+    "axios": "^1.6.0",
+    "boxen": "^5.1.2",
+    "chalk": "^4.1.2",
+    "commander": "^12.0.0",
+    "ejs": "^3.1.9",
+    "execa": "^8.0.1",
+    "figures": "^3.2.0",
+    "fs-extra": "^11.2.0",
+    "gradient-string": "^2.0.2",
+    "inquirer": "^9.2.0",
+    "ora": "^5.4.1",
+    "semver": "^7.6.0",
+    "update-notifier": "^5.1.0",
+    "validate-npm-package-name": "^5.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "eslint": "^8.57.0",
+    "jest": "^29.7.0"
+  },
+  "scripts": {
+    "test": "jest --coverage",
+    "test:watch": "jest --watch",
+    "lint": "eslint src/ bin/ --fix",
+    "prepublishOnly": "npm test",
+    "link": "npm link",
+    "start": "node bin/create-odoo-module.js"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "testMatch": [
+      "**/tests/**/*.test.js"
+    ],
+    "collectCoverageFrom": [
+      "src/**/*.js"
+    ]
+  }
+}

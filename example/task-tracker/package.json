@@ -1,0 +1,16 @@
+{
+  "name": "task-tracker",
+  "version": "1.0.0",
+  "description": "Task Tracker Odoo module",
+  "private": true,
+  "scripts": {
+    "deploy": "bash scripts/deploy.sh",
+    "deploy:win": "powershell scripts/deploy.ps1",
+    "dev": "docker-compose -f scripts/docker-compose.yml up -d",
+    "dev:stop": "docker-compose -f scripts/docker-compose.yml down",
+    "dev:logs": "docker-compose -f scripts/docker-compose.yml logs -f odoo",
+    "odoo:test": "cd odoo_module && python -m pytest tests/ -v",
+    "odoo:lint": "cd odoo_module && python -m flake8 . --max-line-length=120 --exclude=__pycache__",
+    "odoo:shell": "docker exec -it odoo_dev odoo shell -d odoo"
+  }
+}

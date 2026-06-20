@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ══════════════════════════════════════════════════════════════════════
+         SEARCH VIEW
+         ══════════════════════════════════════════════════════════════════ -->
+    <record id="view_task_tracker_search" model="ir.ui.view">
+        <field name="name">task.tracker.search</field>
+        <field name="model">task.tracker</field>
+        <field name="arch" type="xml">
+            <search string="Search Task Tracker">
+                <field name="name" string="Name" filter_domain="[('name','ilike',self)]"/>
+                <field name="reference" string="Reference"/>
+                <field name="user_id" string="Responsible"/>
+                <separator/>
+                <!-- Status filters -->
+                <filter name="filter_draft"       string="Draft"
+                        domain="[('state','=','draft')]"/>
+                <filter name="filter_confirmed"   string="Confirmed"
+                        domain="[('state','=','confirmed')]"/>
+                <filter name="filter_in_progress" string="In Progress"
+                        domain="[('state','=','in_progress')]"/>
+                <filter name="filter_done"        string="Done"
+                        domain="[('state','=','done')]"/>
+                <filter name="filter_cancelled"   string="Cancelled"
+                        domain="[('state','=','cancelled')]"/>
+                <separator/>
+                <filter name="filter_my"    string="My Records"
+                        domain="[('user_id','=',uid)]"/>
+                <filter name="filter_today" string="Starting Today"
+                        domain="[('date_start','=',context_today().strftime('%Y-%m-%d'))]"/>
+                <separator/>
+                <filter name="filter_archived" string="Archived"
+                        domain="[('active','=',False)]"/>
+                <!-- Group by -->
+                <group expand="0" string="Group By">
+                    <filter name="group_state"      string="Status"      context="{'group_by': 'state'}"/>
+                    <filter name="group_user"       string="Responsible" context="{'group_by': 'user_id'}"/>
+                    <filter name="group_priority"   string="Priority"    context="{'group_by': 'priority'}"/>
+                    <filter name="group_date_start" string="Start Date"  context="{'group_by': 'date_start:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- ══════════════════════════════════════════════════════════════════════
+         FORM VIEW
+         ══════════════════════════════════════════════════════════════════ -->
+    <record id="view_task_tracker_form" model="ir.ui.view">
+        <field name="name">task.tracker.form</field>
+        <field name="model">task.tracker</field>
+        <field name="arch" type="xml">
+            <form string="Task Tracker">
+                <header>
+                    <button name="action_confirm"    string="Confirm"      type="object"
+                            class="btn-primary"
+                            invisible="state != 'draft'"/>
+                    <button name="action_start"      string="Start"        type="object"
+                            class="btn-primary"
+                            invisible="state != 'confirmed'"/>
+                    <button name="action_done"       string="Mark as Done" type="object"
+                            class="btn-success"
+                            invisible="state != 'in_progress'"/>
+                    <button name="action_cancel"     string="Cancel"       type="object"
+                            invisible="state in ('done','cancelled')"/>
+                    <button name="action_reset_draft" string="Reset to Draft" type="object"
+                            invisible="state != 'cancelled'"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,confirmed,in_progress,done"/>
+                </header>
+                <sheet>
+                    <!-- Priority stars -->
+                    <div class="oe_title">
+                        <label for="priority" class="oe_edit_only"/>
+                        <field name="priority" widget="priority"/>
+                    </div>
+
+                    <!-- Ribbon for cancelled state -->
+                    <div class="oe_ribbon" invisible="state != 'cancelled'">
+                        <span>Cancelled</span>
+                    </div>
+
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Task name..."/>
+                        </h1>
+                    </div>
+
+                    <group>
+                        <group string="Details">
+                            <field name="reference" readonly="1"/>
+                            <field name="user_id" widget="many2one_avatar_user"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="tag_ids" widget="many2many_tags"
+                                   options="{'color_field': 'color'}"/>
+                        </group>
+                        <group string="Dates">
+                            <field name="date_start"/>
+                            <field name="date_end"/>
+                            <field name="duration_days" readonly="1"/>
+                        </group>
+                    </group>
+
+                    <group string="Description">
+                        <field name="description" nolabel="1"
+                               placeholder="Add a description..."/>
+                    </group>
+                </sheet>
+                <!-- Chatter -->
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- ══════════════════════════════════════════════════════════════════════
+         LIST VIEW
+         ══════════════════════════════════════════════════════════════════ -->
+    <record id="view_task_tracker_list" model="ir.ui.view">
+        <field name="name">task.tracker.list</field>
+        <field name="model">task.tracker</field>
+        <field name="arch" type="xml">
+            <list string="Task Tracker"
+                  decoration-danger="state == 'cancelled'"
+                  decoration-success="state == 'done'"
+                  decoration-warning="state == 'in_progress'">
+                <field name="priority" widget="priority"/>
+                <field name="reference"/>
+                <field name="name"/>
+                <field name="state" widget="badge"
+                       decoration-info="state == 'draft'"
+                       decoration-primary="state == 'confirmed'"
+                       decoration-warning="state == 'in_progress'"
+                       decoration-success="state == 'done'"
+                       decoration-danger="state == 'cancelled'"/>
+                <field name="user_id" widget="many2one_avatar_user"/>
+                <field name="date_start"/>
+                <field name="date_end"/>
+                <field name="duration_days" string="Days"/>
+                <!-- Inline action buttons -->
+                <button name="action_confirm" string="Confirm" type="object"
+                        icon="fa-check" invisible="state != 'draft'"/>
+                <button name="action_done" string="Done" type="object"
+                        icon="fa-flag" invisible="state != 'in_progress'"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ══════════════════════════════════════════════════════════════════════
+         KANBAN VIEW
+         ══════════════════════════════════════════════════════════════════ -->
+    <record id="view_task_tracker_kanban" model="ir.ui.view">
+        <field name="name">task.tracker.kanban</field>
+        <field name="model">task.tracker</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state"
+                    class="o_kanban_small_column"
+                    quick_create="false">
+                <field name="name"/>
+                <field name="reference"/>
+                <field name="state"/>
+                <field name="user_id"/>
+                <field name="priority"/>
+                <field name="date_start"/>
+                <field name="date_end"/>
+                <field name="color"/>
+                <templates>
+                    <t t-name="card">
+                        <div t-attf-class="oe_kanban_color_#{record.color.raw_value}">
+                            <div class="o_kanban_record_top">
+                                <div class="o_kanban_record_headings">
+                                    <small class="o_kanban_record_subtitle text-muted">
+                                        <t t-esc="record.reference.value"/>
+                                    </small>
+                                </div>
+                                <field name="priority" widget="priority"/>
+                            </div>
+                            <div class="o_kanban_record_body">
+                                <strong>
+                                    <field name="name"/>
+                                </strong>
+                                <div class="mt-1">
+                                    <field name="state" widget="badge"/>
+                                </div>
+                                <div class="mt-1" t-if="record.date_start.raw_value">
+                                    <span class="text-muted">
+                                        <t t-esc="record.date_start.value"/> →
+                                        <t t-esc="record.date_end.value"/>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="o_kanban_record_bottom">
+                                <div class="oe_kanban_bottom_right">
+                                    <field name="user_id" widget="many2one_avatar_user"/>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- ══════════════════════════════════════════════════════════════════════
+         ACTIVITY VIEW
+         ══════════════════════════════════════════════════════════════════ -->
+    <record id="view_task_tracker_activity" model="ir.ui.view">
+        <field name="name">task.tracker.activity</field>
+        <field name="model">task.tracker</field>
+        <field name="arch" type="xml">
+            <activity string="Task Tracker">
+                <field name="user_id"/>
+                <templates>
+                    <div t-name="activity-box">
+                        <img t-att-src="activity_image('res.users','image_128',record.user_id.raw_value)"
+                             t-att-title="record.user_id.value"
+                             t-att-alt="record.user_id.value"/>
+                        <div class="activity-desc">
+                            <field name="name"/>
+                            <field name="state" widget="badge"/>
+                        </div>
+                    </div>
+                </templates>
+            </activity>
+        </field>
+    </record>
+
+    <!-- ══════════════════════════════════════════════════════════════════════
+         ACTION
+         ══════════════════════════════════════════════════════════════════ -->
+    <record id="action_task_tracker" model="ir.actions.act_window">
+        <field name="name">Task Tracker</field>
+        <field name="res_model">task.tracker</field>
+        <field name="view_mode">list,kanban,form,activity</field>
+        <field name="search_view_id" ref="view_task_tracker_search"/>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first Task Tracker record
+            </p>
+            <p>Get started by clicking <b>New</b>.</p>
+        </field>
+    </record>
+
+</odoo>

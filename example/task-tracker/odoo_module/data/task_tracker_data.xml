@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Sequence for Task Tracker -->
+        <record id="seq_task_tracker" model="ir.sequence">
+            <field name="name">Task Tracker Sequence</field>
+            <field name="code">task.tracker</field>
+            <field name="prefix">TSK/%(year)s/</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+    </data>
+</odoo>
